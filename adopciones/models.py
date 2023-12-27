@@ -20,7 +20,7 @@ class Organizacion(models.Model):
     nombre_org = models.CharField(primary_key=True, max_length=50, verbose_name="Nombre de la organizacion")
     tipo_organizacion = models.CharField(max_length=50, verbose_name= "Tipo de Organizacion")
     #comuna = models.ForeignKey(Comuna, on_delete=models.CASCADE)
-    logo_org = models.ImageField(upload_to="logo", verbose_name= "Logo de la Organizacion", blank = True)
+    logo_org = models.ImageField(upload_to="logos_org", verbose_name= "Logo de la Organizacion", blank = True)
     correo = models.CharField(max_length=50, verbose_name = "Correo de contacto de la organizacion", default = "correodefault@gmail.com")
     contacto = models.CharField(max_length=25,verbose_name = 'Telefono de contacto de la organizacion', default = "+569")
 class SedeOrganizacion(models.Model):
@@ -45,13 +45,16 @@ class Mascota(models.Model):
     nombre_org = models.ForeignKey(Organizacion, max_length=12, verbose_name="Nombre de la organizacion" , on_delete=models.CASCADE)
     tipo_nombre = models.ForeignKey(TipoMascota, on_delete=models.CASCADE)
     descripcion = models.TextField(verbose_name = "Descripcion de la mascota")
-    caracteristicas =  models.CharField(max_length=100, verbose_name="Caracteristicas de la mascota", null=True, blank=True)
+    tamano = models.CharField(max_length=25, verbose_name="Tamaño de la mascota", choices=[('S', 'Pequeño'), ('L', 'Grande'), ('M', 'Mediano')], default ='S' )
+    soc_1 = models.CharField(max_length=25, verbose_name="Sociable con niños", choices=[('S', 'Si'), ('N', 'No'), ('N/A', 'No se sabe')], default ='N/A' )
+    soc_2 = models.CharField(max_length=25, verbose_name="Sociable con perros", choices=[('S', 'Si'), ('N', 'No'), ('N/A', 'No se sabe')], default ='N/A' )
+    soc_3 = models.CharField(max_length=25, verbose_name="Sociable con gatos", choices=[('S', 'Si'), ('N', 'No'), ('N/A', 'No se sabe')], default ='N/A' )
     rut = models.ForeignKey(Usuario, max_length=12, verbose_name="RUT" , on_delete=models.CASCADE, blank = True, null = True)
     edad_est = models.IntegerField(verbose_name = "Edad estimada de la mascota")
     #Revisar
 
 class Imagen(models.Model):
-    img_mascota = models.ImageField(upload_to="mascota", verbose_name= "Imagen de la mascota")
+    img_mascota = models.ImageField(upload_to="Img_mascotas", verbose_name= "Imagen de la mascota")
     id_mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)
     #Averiguar como heredar ID default
 
