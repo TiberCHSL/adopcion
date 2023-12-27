@@ -23,6 +23,7 @@ class Organizacion(models.Model):
     logo_org = models.ImageField(upload_to="logos_org", verbose_name= "Logo de la Organizacion", blank = True)
     correo = models.CharField(max_length=50, verbose_name = "Correo de contacto de la organizacion", default = "correodefault@gmail.com")
     contacto = models.CharField(max_length=25,verbose_name = 'Telefono de contacto de la organizacion', default = "+569")
+
 class SedeOrganizacion(models.Model):
     nombre_org = models.ForeignKey(Organizacion, on_delete=models.CASCADE)
     comuna = models.ForeignKey(Comuna, on_delete=models.CASCADE)
@@ -68,7 +69,7 @@ class Seguimiento(models.Model):
     id_mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)
 
 class Vacuna(models.Model):
-    fecha = models.DateField(verbose_name="Fecha de Nacimiento", null=True, blank=True)
+    fecha = models.DateField(verbose_name="Fecha de Vacunacion", null=True, blank=True)
     tipo_vacuna = models.CharField(max_length=100, verbose_name="Tipo de vacuna", null=True, blank=True)
     vigencia = models.CharField(max_length=100, verbose_name="Vigencia de la vacuna (meses o años)", null=True, blank=True)
     id_seguimiento = models.ForeignKey(Seguimiento, on_delete=models.CASCADE)
