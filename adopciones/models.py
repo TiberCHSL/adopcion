@@ -43,7 +43,7 @@ class TipoMascota(models.Model):
     tipo_nombre = models.CharField(primary_key = True, max_length=10, verbose_name="Tipo de mascota", choices=[('P', 'Perro'), ('G', 'Gato'), ('O', 'Otro')])
 
 class Mascota(models.Model):
-    sede_org = models.ForeignKey(SedeOrganizacion, max_length=12, verbose_name="Sede de la organizacion" , on_delete=models.CASCADE, default = "0")
+    id_sede_org = models.ForeignKey(SedeOrganizacion, max_length=12, verbose_name="Sede de la organizacion" , on_delete=models.CASCADE, default = "0")
     tipo_nombre = models.ForeignKey(TipoMascota, on_delete=models.CASCADE)
     descripcion = models.TextField(verbose_name = "Descripcion de la mascota")
     tamano = models.CharField(max_length=25, verbose_name="Tamaño de la mascota", choices=[('S', 'Pequeño'), ('L', 'Grande'), ('M', 'Mediano')], default ='S' )
