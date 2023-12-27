@@ -64,7 +64,7 @@ class Seguimiento(models.Model):
     centro_veterinario = models.CharField(max_length=100, verbose_name="Centro veterinario",null=True, blank=True)
     medico_veterinario = models.CharField(max_length=100, verbose_name="Medico veterinario", null=True, blank=True)
     diagnostico = models.TextField(verbose_name = "Diagnostico del seguimiento")
-    receta = models.CharField(max_length=200, verbose_name= "Receta de la visita")
+    receta = models.CharField(max_length=200, verbose_name= "Receta de la visita", null = True, blank = True)
     rut = models.ForeignKey(Usuario, max_length=12, verbose_name="RUT del dueño" , on_delete=models.CASCADE)
     id_mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)
 
