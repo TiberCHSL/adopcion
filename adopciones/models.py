@@ -27,6 +27,7 @@ class SedeOrganizacion(models.Model):
     nombre_org = models.ForeignKey(Organizacion, on_delete=models.CASCADE)
     comuna = models.ForeignKey(Comuna, on_delete=models.CASCADE)
     direccion = models.CharField(max_length = 100, verbose_name = "Direccion de la sede")
+    contacto = models.CharField(max_length=25,verbose_name = 'Telefono de contacto de la sede', default = "+569")
 
 class Usuario(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,verbose_name = "Nombre de usuario")
