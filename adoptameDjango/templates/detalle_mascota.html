@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <div class="detalle-container">
+    <div class="imagen-container">
+      {% for imagen in mascota.imagen_set.all %}
+        <img class="imagen-mascota" src="{{ imagen.img_mascota.url }}" alt="">
+      {% endfor %}
+    </div>
+    <div class="detalles">
+      <h1>{{ mascota.tipo_nombre.nombre }}</h1>
+      <p>Región: {{ mascota.id_sede_org.comuna.region.nombre }}</p>
+      <p>Comuna: {{ mascota.id_sede_org.comuna.nombre }}</p>
+      <p>Tamaño: {{ mascota.get_tamano_display }}</p>
+      <p>Edad: {{ mascota.edad_est }} años</p>
+      <p>Descripción: {{ mascota.descripcion }}</p>
+      <p>Sociable con niños: {{ mascota.soc_1 }}</p>
+      <p>Sociable con perros: {{ mascota.soc_2 }}</p>
+      <p>Sociable con gatos: {{ mascota.soc_3 }}</p>
+      <p>Nombre de la organización: {{ mascota.id_sede_org.nombre_org.nombre_org }}</p>
+      <p>Número de contacto de la sede: {{ mascota.id_sede_org.contacto }}</p>
+    </div>
+  </div>
+
+  <!-- Agrega este bloque para el script JavaScript -->
+  <div class="imagen-mascota-ampliada"></div>
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const imagenes = document.querySelectorAll(".imagen-mascota");
+      const contenedorAmpliado = document.querySelector(".imagen-mascota-ampliada");
+
+      imagenes.forEach((imagen) => {
+        imagen.addEventListener("click", function () {
+          const imagenAmpliada = document.createElement("img");
+          imagenAmpliada.src = imagen.src;
+          contenedorAmpliado.innerHTML = "";
+          contenedorAmpliado.appendChild(imagenAmpliada);
+          contenedorAmpliado.style.display = "flex";
+        });
+      });
+
+      contenedorAmpliado.addEventListener("click", function () {
+        contenedorAmpliado.style.display = "none";
+      });
+    });
+  </script>
+
+  <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
+{% endblock %}

@@ -20,7 +20,7 @@ class Organizacion(models.Model):
     nombre_org = models.CharField(primary_key=True, max_length=50, verbose_name="Nombre de la organizacion")
     tipo_organizacion = models.CharField(max_length=50, verbose_name= "Tipo de Organizacion")
     #comuna = models.ForeignKey(Comuna, on_delete=models.CASCADE)
-    logo_org = models.ImageField(upload_to="logos_org", verbose_name= "Logo de la Organizacion", blank = True)
+    logo_org = models.ImageField(upload_to="media", verbose_name= "Logo de la Organizacion", blank = True)
     correo = models.CharField(max_length=50, verbose_name = "Correo de contacto de la organizacion", default = "correodefault@gmail.com")
     contacto = models.CharField(max_length=25,verbose_name = 'Telefono de contacto de la organizacion', default = "+569")
 
@@ -90,7 +90,7 @@ class Mascota(models.Model):
     #Revisar
 
 class Imagen(models.Model):
-    img_mascota = models.ImageField(upload_to="Img_mascotas", verbose_name= "Imagen de la mascota")
+    img_mascota = models.ImageField(upload_to="media", verbose_name= "Imagen de la mascota")
     id_mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)
 
     def __str__(self):
