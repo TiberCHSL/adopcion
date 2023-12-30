@@ -1,89 +1,26 @@
+{% extends 'base.html' %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-<title>Pet Shop</title>
-<meta charset="iso-8859-1">
-<link href="{% static 'css/style.css' %}" rel="stylesheet" type="text/css">
-<!--[if IE 6]><link href="css/ie6.css" rel="stylesheet" type="text/css"><![endif]-->
-<!--[if IE 7]><link href="css/ie7.css" rel="stylesheet" type="text/css"><![endif]-->
-</head>
-<body>
-  <div id="header"> <a href="#" id="logo"><img src="{% static 'images/logo.gif' %}" width="310" height="114" alt=""></a>
-  <ul class="navigation">
-    <li class="active"><a href="{% url 'index' %}">Home</a></li>
-    <li><a href="{% url 'buscar_mascotas' %}">Mascotas</a></li>
-    <li><a href="about.html">Colectas</a></li>
-    <li><a href="petguide.html">Seguimiento</a></li>
-    <li><a href="contact.html">Contactanos</a></li>
-    {% if user.is_authenticated %}
-    <li><a >Cerrar Sesión</a></li>
-    {% else %}
-    <li><a >Iniciar Sesión</a></li>
-    {% endif %}
 
-  </ul>
-</div>
-<div id="body">
+{% block content %}
   <div class="banner">&nbsp;</div>
-  <div id="content">
-    <div class="content">
-      <ul>
-        {% for mascota in mascotas %}
-          {% if not mascota.estado_adopcion %}
-            {% with imagen=imagenes_mascotas.mascota.id %}
-              <li>
-                <a href="#"><img src="{% if mascota.imagen %}{{ mascota.imagen.img_mascota.url }}{% else %}{% static 'images/default_image.jpg' %}{% endif %}" width="171" height="240" alt=""></a>
-                <h2>{{ mascota.tipo_nombre.nombre }}</h2>
-                <p>Región: {{ mascota.id_sede_org.comuna.region.nombre }}</p>
-                <p>Comuna: {{ mascota.id_sede_org.comuna.nombre }}</p>
-                <p>Tamaño: {{ mascota.get_tamano_display }}</p>
-                <p>Edad: {{ mascota.edad_est }} años</p>
-                <a class="more" href="{% url 'detalle_mascota' mascota.id %}">Ver detalles</a>
-            </li>
-            {% endwith %}
-          {% endif %}
-        {% endfor %}
-      </ul>
-      
-      
-      
-      
-    </div>
-    <div id="sidebar">
-      <div class="search">
-        <input type="text" name="s" value="Find">
-        <button>&nbsp;</button>
-        <label for="articles">
-          <input type="radio" id="articles">
-          Articles</label>
-        <label for="products">
-          <input type="radio" id="products" checked>
-          PetMart Products</label>
-      </div>
-      <div class="section">
-        <ul class="navigation">
-          <li class="active"><a href="#">Shopping Guides</a></li>
-          <li><a href="#">Discounted Items</a></li>
-        </ul>
-        <div class="aside">
-          <div>
-            <div>
-              <ul>
-                <li><a href="#">Pet Accesories </a> <a class="more" href="#">see all</a></li>
-                <li><a href="#">Bath Essentials</a> <a class="more" href="#">see all</a></li>
-                <li><a href="#">Pet Food</a> <a class="more" href="#">see all</a></li>
-                <li><a href="#">Pet Vitamins</a> <a class="more" href="#">see all</a></li>
-                <li><a href="#">Pet Needs</a> <a class="more" href="#">see all</a></li>
-                <li><a href="#">Pet Toy and Treats</a> <a class="more" href="#">see all</a></li>
-                <li><a href="#">Pet Supplies</a> <a class="more" href="#">see all</a></li>
-                <li><a href="#">Pet Emergency Kit</a> <a class="more" href="#">see all</a></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="content">
+    <ul>
+      {% for mascota in mascotas %}
+        {% if not mascota.estado_adopcion %}
+          {% with imagen=imagenes_mascotas.mascota.id %}
+            <li>
+              <a href="#"><img src="{% if mascota.imagen %}{{ mascota.imagen.img_mascota.url }}{% else %}{% static 'images/default_image.jpg' %}{% endif %}" width="171" height="240" alt=""></a>
+              <h2>{{ mascota.tipo_nombre.nombre }}</h2>
+              <p>Región: {{ mascota.id_sede_org.comuna.region.nombre }}</p>
+              <p>Comuna: {{ mascota.id_sede_org.comuna.nombre }}</p>
+              <p>Tamaño: {{ mascota.get_tamano_display }}</p>
+              <p>Edad: {{ mascota.edad_est }} años</p>
+              <a class="more" href="{% url 'detalle_mascota' mascota.id %}">Ver detalles</a>
+          </li>
+          {% endwith %}
+        {% endif %}
+      {% endfor %}
+    </ul>
   </div>
   <div class="featured">
     <ul>
@@ -92,31 +29,4 @@
       <li class="last"><a href="#"><img src="{% static 'images/pet-grooming.jpg' %}" width="300" height="90" alt=""></a></li>
     </ul>
   </div>
-</div>
-<div id="footer">
-  <div class="section">
-    <ul>
-      <li> <img src="{% static 'images/friendly-pets.jpg' %}" width="240" height="186" alt="">
-        <h2><a href="#">Friendly Pets</a></h2>
-        <p> Lorem ipsum dolor sit amet, consectetuer adepiscing elit, sed diam nonummy nib. <a class="more" href="#">Read More</a> </p>
-      </li>
-      <li> <img src="{% static 'images/pet-lover2.jpg' %}" width="240" height="186" alt="">
-        <h2><a href="#">How dangerous are they</a></h2>
-        <p> Lorem ipsum dolor sit amet, cons ectetuer adepis cing, sed diam euis. <a class="more" href="#">Read More</a> </p>
-      </li>
-      <li> <img src="{% static 'images/healthy-dog.jpg' %}" width="240" height="186" alt="">
-        <h2><a href="#">Keep them healthy</a></h2>
-        <p> Lorem ipsum dolor sit amet, consectetuer adepiscing elit, sed diam nonu mmy. <a class="more" href="#">Read More</a> </p>
-      </li>
-      <li>
-        <h2><a href="#">Love...love...love...pets</a></h2>
-        <p> Lorem ipsum dolor sit amet, consectetuer adepiscing elit, sed diameusim. <a class="more" href="#">Read More</a> </p>
-        <img src="{% static 'images/pet-lover.jpg' %}" width="240" height="186" alt="">
-    </ul>
-  </div>
-  <div id="footnote">
-    <div class="section">Copyright &copy; 2012 <a href="#">Company Name</a> All rights reserved | Website Template By <a target="_blank" href="http://www.freewebsitetemplates.com/">freewebsitetemplates.com</a></div>
-  </div>
-</div>
-</body>
-</html>
+{% endblock %}

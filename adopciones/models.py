@@ -46,7 +46,7 @@ class Usuario(models.Model):
     role = models.CharField(max_length=10, verbose_name="Rol de usuario", choices=[('A', 'Adoptante'), ('O', 'Organizacion')], default= 'A')
     comuna = models.ForeignKey(Comuna, on_delete=models.CASCADE)
     def __str__(self):
-        return self.user
+        return str(self.user)
 
 
 class DatosPagoUsuario(models.Model):
@@ -128,8 +128,8 @@ class Colecta(models.Model):
     banco = models.CharField(max_length=50)
     acc_type = models.CharField(max_length=50, choices=[('C','Cuenta corriente'),('V','Cuenta vista'),('A','Cuenta de ahorro')])
     num_cuenta = models.CharField(max_length=50,verbose_name = "Numero de la cuenta")
-    monto_inicial = models.IntegerField(verbose_name = "Monto inicial de colecta (0)")
-    
+    monto_recaudado= models.IntegerField(verbose_name = "Monto recaudado", default = 0)
+    monto_final = models.IntegerField(verbose_name = "Monto a recaudar", default = 100000)
     def __str__(self):
         return self.nombre_colecta
 

@@ -15,13 +15,13 @@
         <ul class="navigation">
             <li class="active"><a href="{% url 'index' %}">Home</a></li>
             <li><a href="{% url 'buscar_mascotas' %}">Mascotas</a></li>
-            <li><a href="about.html">Colectas</a></li>
+            <li><a href="{% url 'ver_colectas' %}">Colectas</a></li>
             <li><a href="petguide.html">Seguimiento</a></li>
             <li><a href="contact.html">Contactanos</a></li>
             {% if user.is_authenticated %}
-            <li><a >Cerrar Sesión</a></li>
+            <a href="{% url 'logout' %}">Cerrar Sesión</a>
             {% else %}
-            <li><a >Iniciar Sesión</a></li>
+            <a href="{% url 'login' %}">Iniciar Sesión</a>
             {% endif %}
         </ul>
     </div>

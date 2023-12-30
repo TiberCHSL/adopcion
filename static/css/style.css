@@ -1056,4 +1056,15 @@ body {
 	border: 2px solid #fff;
 	border-radius: 5px;
   }
-  
+  .progress {
+    background-color: #f3f3f3;
+    border-radius: 4px;
+    height: 20px;
+    width: 100%;
+    padding: 3px;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: #4caf50;
+}
