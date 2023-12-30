@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+  <h1>Resultados de la búsqueda</h1>
+
+  <form method="GET">
+    {{ form.as_p }}
+    <button type="submit">Buscar</button>
+  </form>
+
+  {% if mascotas %}
+    <ul>
+      {% for mascota in mascotas %}
+        {% if not mascota.estado_adopcion %}
+          {% with imagen=imagenes_mascotas.mascota.id %}
+            <li>
+              <a href="#"><img src="{% if mascota.imagen %}{{ mascota.imagen.img_mascota.url }}{% else %}{% static 'images/default_image.jpg' %}{% endif %}" width="171" height="240" alt=""></a>
+              <h2>{{ mascota.tipo_nombre.get_tipo_nombre_display }}</h2>
+              <p>Región: {{ mascota.id_sede_org.comuna.region.nombre }}</p>
+              <p>Comuna: {{ mascota.id_sede_org.comuna.nombre }}</p>
+              <p>Tamaño: {{ mascota.get_tamano_display }}</p>
+              <p>Edad: {{ mascota.edad_est }} años</p>
+              <a class="more" href="{% url 'detalle_mascota' mascota.id %}">Ver detalles</a>
+            </li>
+          {% endwith %}
+        {% endif %}
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No se encontraron mascotas que coincidan con los criterios de búsqueda.</p>
+  {% endif %}
+{% endblock %}
