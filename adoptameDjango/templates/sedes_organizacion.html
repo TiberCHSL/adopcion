@@ -1,0 +1,20 @@
+{% extends 'base_org.html' %}
+
+{% block content %}
+    <h1>Sedes de la Organización</h1>
+
+    <ul>
+    {% for sede in sedes %}
+        <li>
+            <h2>{{ sede.nombre_sede }}</h2>
+            <p>Comuna: {{ sede.comuna }}</p>
+            <p>Dirección: {{ sede.direccion }}</p>
+            <p>Contacto: {{ sede.contacto }}</p>
+            <a href="{% url 'mascotas_sede_view' sede.nombre_sede %}">Ver mascotas</a>
+            <a href="{% url 'agregar_mascota_view' sede.nombre_sede %}">Crear mascota</a>
+        </li>
+    {% empty %}
+        <li>No hay sedes disponibles.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

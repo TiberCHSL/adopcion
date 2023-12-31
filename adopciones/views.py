@@ -6,7 +6,8 @@ from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
 from .models import Mascota, Imagen, TipoMascota, Comuna, SedeOrganizacion, Colecta, DatosPagoUsuario, Usuario, Seguimiento, Pagos, Vacuna
-from .forms import BusquedaMascotaForm, RegistroUsuarioForm, LoginForm, DatosPagoUsuarioForm, UsuarioForm, SeguimientoForm, VacunaForm
+from .forms import BusquedaMascotaForm, RegistroUsuarioForm, LoginForm, DatosPagoUsuarioForm, UsuarioForm, SeguimientoForm, VacunaForm, MascotaForm, ImagenForm
+from django.forms import formset_factory
 
 def index(request):
     mascotas = Mascota.objects.select_related('sede_org__comuna__region').all()[:4]
@@ -219,4 +220,44 @@ def organizacion_index(request):
 
     return render(request, 'index_org.html', {'mascotas': mascotas, 'logo_url': logo_url})
 
-    
+@login_required
+def sedes_organizacion(request):
+    # Get the logged-in user's organization
+    user_org = request.user.usuario.nombre_org
+
+    # Get the SedeOrganizacion instances associated with the user's organization
+    sedes = SedeOrganizacion.objects.filter(nombre_org=user_org)
+
+    return render(request, 'sedes_organizacion.html', {'sedes': sedes})
+
+def mascotas_sede(request, sede_id):
+    # Get the SedeOrganizacion instance
+    sede = SedeOrganizacion.objects.get(nombre_sede=sede_id)
+
+    # Get the Mascota instances associated with the SedeOrganizacion
+    mascotas = Mascota.objects.filter(sede_org=sede)
+
+    return render(request, 'mascotas_sede.html', {'mascotas': mascotas})
+
+@login_required
+def agregar_mascota(request, sede_id):
+    # Get the SedeOrganizacion instance
+    sede = SedeOrganizacion.objects.get(nombre_sede=sede_id)
+
+    ImagenFormSet = formset_factory(ImagenForm, extra=3)
+    if request.method == 'POST':
+        form = MascotaForm(request.POST)
+        imagen_formset = ImagenFormSet(request.POST, request.FILES, prefix='imagenes')
+        if form.is_valid() and imagen_formset.is_valid():
+            mascota = form.save(commit=False)
+            mascota.sede_org = sede  # Set the sede_org field
+            mascota.save()
+            for imagen_form in imagen_formset:
+                imagen = imagen_form.save(commit=False)
+                imagen.id_mascota = mascota
+                imagen.save()
+            return redirect('mascotas_sede_view', sede_id=mascota.sede_org.nombre_sede)
+    else:
+        form = MascotaForm()
+        imagen_formset = ImagenFormSet(prefix='imagenes')
+    return render(request, 'agregar_mascota.html', {'form': form, 'imagen_formset': imagen_formset})

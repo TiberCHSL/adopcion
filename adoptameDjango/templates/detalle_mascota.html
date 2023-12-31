@@ -9,16 +9,16 @@
     </div>
     <div class="detalles">
       <h1>{{ mascota.tipo_nombre.nombre }}</h1>
-      <p>Región: {{ mascota.id_sede_org.comuna.region.nombre }}</p>
-      <p>Comuna: {{ mascota.id_sede_org.comuna.nombre }}</p>
+      <p>Región: {{ mascota.sede_org.comuna.region.nombre }}</p>
+      <p>Comuna: {{ mascota.sede_org.comuna.nombre }}</p>
       <p>Tamaño: {{ mascota.get_tamano_display }}</p>
       <p>Edad: {{ mascota.edad_est }} años</p>
       <p>Descripción: {{ mascota.descripcion }}</p>
       <p>Sociable con niños: {{ mascota.soc_1 }}</p>
       <p>Sociable con perros: {{ mascota.soc_2 }}</p>
       <p>Sociable con gatos: {{ mascota.soc_3 }}</p>
-      <p>Nombre de la organización: {{ mascota.id_sede_org.nombre_org.nombre_org }}</p>
-      <p>Número de contacto de la sede: {{ mascota.id_sede_org.contacto }}</p>
+      <p>Nombre de la organización: {{ mascota.sede_org.nombre_org.nombre_org }}</p>
+      <p>Número de contacto de la sede: {{ mascota.sede_org.contacto }}</p>
     </div>
   </div>
 

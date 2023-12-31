@@ -4,7 +4,7 @@ from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
 from . import views
 from .views import buscar_mascotas, ver_colectas, detalle_colecta, registro_usuario, LoginUsuarioView, perfil_usuario, agregar_datos_pago, crear_seguimiento, organizacion_index
-
+from .views import sedes_organizacion, mascotas_sede, agregar_mascota
 urlpatterns = [
     
     path("", views.index, name="index"),
@@ -23,6 +23,9 @@ urlpatterns = [
     path('eliminar_datos_pago/', views.eliminar_datos_pago, name='eliminar_datos_pago'),
     path('lista_vacunas/<int:seguimiento_id>/', views.lista_vacunas, name='lista_vacunas'),
     path('organizacion_index/', organizacion_index, name='organizacion_index_view'),
+    path('sedes_organizacion/', sedes_organizacion, name='sedes_organizacion_view'),
+    path('mascotas_sede/<str:sede_id>/', mascotas_sede, name='mascotas_sede_view'),
+    path('agregar_mascota/<str:sede_id>/', agregar_mascota, name='agregar_mascota_view'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

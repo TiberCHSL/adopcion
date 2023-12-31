@@ -11,8 +11,8 @@
             <li>
               <a href="#"><img src="{% if mascota.imagen %}{{ mascota.imagen.img_mascota.url }}{% else %}{% static 'images/default_image.jpg' %}{% endif %}" width="171" height="240" alt=""></a>
               <h2>{{ mascota.tipo_nombre.nombre }}</h2>
-              <p>Región: {{ mascota.id_sede_org.comuna.region.nombre }}</p>
-              <p>Comuna: {{ mascota.id_sede_org.comuna.nombre }}</p>
+              <p>Región: {{ mascota.sede_org.comuna.region.nombre }}</p>
+              <p>Comuna: {{ mascota.sede_org.comuna.nombre }}</p>
               <p>Tamaño: {{ mascota.get_tamano_display }}</p>
               <p>Edad: {{ mascota.edad_est }} años</p>
               <a class="more" href="{% url 'detalle_mascota' mascota.id %}">Ver detalles</a>

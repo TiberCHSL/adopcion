@@ -1,0 +1,18 @@
+{% extends 'base_org.html' %}
+
+{% block content %}
+    <h1>Mascotas de la Sede</h1>
+
+    <ul>
+    {% for mascota in mascotas %}
+        <li>
+            <h2>{{ mascota.tipo_nombre.get_tipo_nombre_display }}</h2>
+            <p>Descripción: {{ mascota.descripcion }}</p>
+            <p>Tamaño: {{ mascota.tamano }}</p>
+            <!-- Add more fields as needed -->
+        </li>
+    {% empty %}
+        <li>No hay mascotas disponibles.</li>
+    {% endfor %}
+    </ul>
+{% endblock %}

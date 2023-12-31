@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Agregar Mascota</h1>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {{ imagen_formset.management_form }}
+        <div id="imagen-formset">
+            {% for imagen_form in imagen_formset %}
+                <div class="imagen-form">
+                    {{ imagen_form.as_p }}
+                </div>
+            {% endfor %}
+        </div>
+        <button type="button" id="add-form">Add another image</button>
+        <button type="button" id="delete-form">Delete last image</button>
+        <button type="submit">Guardar</button>
+    </form>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+    $(document).ready(function() {
+        var formCount = {{ imagen_formset|length }};
+        var formsetPrefix = '{{ imagen_formset.prefix }}';
+
+        $('#add-form').click(function() {
+            var newFormHtml = $('#imagen-formset .imagen-form:first').clone(true);
+            newFormHtml.html(newFormHtml.html().replace(/__prefix__/g, formCount));
+            $('#imagen-formset').append(newFormHtml);
+            $('#id_' + formsetPrefix + '-TOTAL_FORMS').val(++formCount);
+        });
+
+        $('#delete-form').click(function() {
+            if (formCount > 1) {
+                $('#imagen-formset .imagen-form:last').remove();
+                $('#id_' + formsetPrefix + '-TOTAL_FORMS').val(--formCount);
+            }
+        });
+    });
+    </script>
+{% endblock %}

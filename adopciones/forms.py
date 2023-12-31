@@ -1,6 +1,6 @@
 # En forms.py
 from django import forms
-from .models import TipoMascota, Region, Usuario, Comuna, User, DatosPagoUsuario, Seguimiento, Vacuna
+from .models import TipoMascota, Region, Usuario, Comuna, User, DatosPagoUsuario, Seguimiento, Vacuna, Mascota, Imagen
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 class BusquedaMascotaForm(forms.Form):
@@ -85,3 +85,13 @@ class SeguimientoForm(forms.ModelForm):
     class Meta:
         model = Seguimiento
         fields = ['fecha', 'centro_veterinario', 'medico_veterinario', 'diagnostico', 'receta']
+
+class MascotaForm(forms.ModelForm):
+    class Meta:
+        model = Mascota
+        fields = ['tipo_nombre', 'tamano', 'edad_est','descripcion','soc_1','soc_2','soc_3']
+
+class ImagenForm(forms.ModelForm):
+    class Meta:
+        model = Imagen
+        fields = ['img_mascota']
