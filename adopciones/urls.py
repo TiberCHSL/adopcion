@@ -3,7 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
 from . import views
-from .views import buscar_mascotas, ver_colectas, detalle_colecta, registro_usuario, LoginUsuarioView
+from .views import buscar_mascotas, ver_colectas, detalle_colecta, registro_usuario, LoginUsuarioView, perfil_usuario, agregar_datos_pago, crear_seguimiento
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -14,6 +14,14 @@ urlpatterns = [
     path('registro/', registro_usuario, name='registro_usuario'),
     path('login/', LoginUsuarioView.as_view(), name='login'),
     path('logout/', LogoutView.as_view(), name='logout'),
+    path('perfil/', perfil_usuario, name='perfil_usuario'),
+    path('agregar_datos_pago/', agregar_datos_pago, name='agregar_datos_pago'),
+    path('crear_seguimiento/<int:mascota_id>/', crear_seguimiento, name='crear_seguimiento'),
+    path('lista_seguimientos/<int:mascota_id>/', views.lista_seguimientos, name='lista_seguimientos'),
+    path('crear_vacuna/<int:mascota_id>/', views.crear_vacuna, name='crear_vacuna'),
+    path('eliminar_datos_pago/', views.eliminar_datos_pago, name='eliminar_datos_pago'),
+    path('lista_vacunas/<int:seguimiento_id>/', views.lista_vacunas, name='lista_vacunas'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+

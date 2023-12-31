@@ -128,6 +128,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGOUT_REDIRECT_URL = 'index'
 LOGIN_REDIRECT_URL = 'index'
 LOGIN_URL = 'login'
+USE_L10N = False
+DATE_INPUT_FORMATS = ('%d/%m/%Y',)
+DATE_FORMAT = 'd/m/Y'
 
 
 # Default primary key field type

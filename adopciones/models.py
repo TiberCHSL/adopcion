@@ -2,19 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from d3_dpa_chile.models import Region, Provincia, Comuna
 
-# Create your models here.
-#IDIOMA_CHOICES = [
-    #('IN', 'Ingles'),
-    #('FR', 'Frances'),
-    #('PO', 'Portugués'),
-    #('AL', 'Alemán'),
-    #('IT', 'Italiano'),
-#]
-#class Region(models.Model):
-    #nombre_region = models.CharField(primary_key = True, max_length=10, verbose_name="Género", choices=[('M', 'Masculino'), ('F', 'Femenino'), ('O', 'Otro')])
-
-#class Comuna(models.Model):
-    #nombre_comuna = models.CharField(primary_key = True, max_length=10, verbose_name="Género", choices=[('M', 'Masculino'), ('F', 'Femenino'), ('O', 'Otro')])
 
 class Organizacion(models.Model):
     nombre_org = models.CharField(primary_key=True, max_length=50, verbose_name="Nombre de la organizacion")
@@ -53,16 +40,16 @@ class DatosPagoUsuario(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,verbose_name = "Nombre de usuario")
     banco = models.CharField(max_length=50)
     acc_type = models.CharField(max_length=50, choices=[('C','Cuenta corriente'),('V','Cuenta vista'),('A','Cuenta de ahorro')])
-    num_cuenta = models.CharField(max_length=50,verbose_name = "Numero de la cuenta")
+    num_cuenta = models.CharField(primary_key = True,max_length=50,verbose_name = "Numero de la cuenta")
     def __str__(self):
-        return self.user
+        return str(self.user)
 
 
 class Pagos(models.Model):
-    num_pago = models.ForeignKey(DatosPagoUsuario,on_delete = models.CASCADE, verbose_name = 'numero del pago')
+    num_cuenta = models.ForeignKey(DatosPagoUsuario, on_delete=models.CASCADE, null = True)
     monto = models.IntegerField(verbose_name = 'Cantidad')
     def __str__(self):
-        return self.num_pago
+        return str(self.num_cuenta)
 
 
 class TipoMascota(models.Model):
@@ -107,11 +94,17 @@ class Seguimiento(models.Model):
     rut = models.ForeignKey(Usuario, max_length=12, verbose_name="RUT del dueño" , on_delete=models.CASCADE)
     id_mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return str(self.fecha)
+
 class Vacuna(models.Model):
     fecha = models.DateField(verbose_name="Fecha de Vacunacion", null=True, blank=True)
     tipo_vacuna = models.CharField(max_length=100, verbose_name="Tipo de vacuna", null=True, blank=True)
     vigencia = models.CharField(max_length=100, verbose_name="Vigencia de la vacuna (meses o años)", null=True, blank=True)
     id_seguimiento = models.ForeignKey(Seguimiento, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.tipo_vacuna
 
 class Verificacion(models.Model):
     tipo_ver = models.CharField(max_length = 20,choices = [("O","Online"),("P","Presencial")])

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Organizacion, Usuario, TipoMascota, Mascota, Imagen, Seguimiento, Vacuna, Verificacion,Colecta,SedeOrganizacion
+from .models import Organizacion, Usuario, TipoMascota, Mascota, Imagen, Seguimiento, Vacuna, Verificacion,Colecta,SedeOrganizacion, DatosPagoUsuario, Pagos
 from d3_dpa_chile.models import Region, Provincia, Comuna
 #Region, Comuna,
 
@@ -16,4 +16,6 @@ admin.site.register(Seguimiento)
 admin.site.register(Vacuna)
 admin.site.register(Verificacion)
 admin.site.register(Colecta)
+admin.site.register(DatosPagoUsuario)
+admin.site.register(Pagos)
 # Register your models here.

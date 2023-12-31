@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h1>Seguimientos</h1>
+
+  {% for seguimiento in seguimientos %}
+    <div>
+      <h2>Fecha: {{ seguimiento.fecha|date:'d/m/Y' }}</h2>
+      <p>Centro Veterinario: {{ seguimiento.centro_veterinario }}</p>
+      <p>Medico Veterinario: {{ seguimiento.medico_veterinario }}</p>
+      <p>Diagnostico: {{ seguimiento.diagnostico }}</p>
+      <p>Receta: {{ seguimiento.receta }}</p>
+      <a href="{% url 'lista_vacunas' seguimiento.id %}">Ver vacunas</a>
+    </div>
+  {% empty %}
+    <p>No hay seguimientos para esta mascota.</p>
+  {% endfor %}
+{% endblock %}

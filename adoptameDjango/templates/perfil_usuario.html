@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <h1>Perfil de Usuario</h1>
+
+  <h2>Datos Personales</h2>
+  <form method="post" action="">
+    {% csrf_token %}
+    {{ usuario_form.as_p }}
+    <button type="submit">Guardar Cambios</button>
+  </form>
+
+  <h2>Datos de Pago</h2>
+    {% if datos_pago %}
+    <p>Banco: {{ datos_pago.banco }}</p>
+    <p>Tipo de cuenta: {{ datos_pago.get_acc_type_display }}</p>
+    <p>Número de cuenta: {{ datos_pago.num_cuenta }}</p>
+    <a href="{% url 'eliminar_datos_pago' %}">Eliminar datos de pago</a>
+    {% else %}
+    <p>No hay datos de pago.</p>
+    <a href="{% url 'agregar_datos_pago' %}">Añadir datos de pago</a>
+    {% endif %}
+  
+
+  <h2>Mascotas Adoptadas</h2>
+  {% if mascotas %}
+    <ul>
+        {% for mascota in mascotas %}
+        <div>
+            <a href="#"><img src="{% if mascota.imagen_set.first %}{{ mascota.imagen_set.first.img_mascota.url }}{% else %}{% static 'images/default_image.jpg' %}{% endif %}" width="171" height="240" alt=""></a>
+            <h2>{{ mascota.tipo_nombre.nombre }}</h2>
+            <p>Región: {{ mascota.id_sede_org.comuna.region.nombre }}</p>
+            <p>Comuna: {{ mascota.id_sede_org.comuna.nombre }}</p>
+            <p>Tamaño: {{ mascota.get_tamano_display }}</p>
+            <p>Edad: {{ mascota.edad_est }} años</p>
+            <a href="{% url 'detalle_mascota' mascota.id %}">Ver detalles</a>
+            <a href="{% url 'crear_seguimiento' mascota.id %}">Agregar seguimiento</a>
+            <a href="{% url 'lista_seguimientos' mascota.id %}">Ver seguimientos</a>
+            <a href="{% url 'crear_vacuna' mascota.id %}">Añadir vacuna</a>
+        </div>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>No tienes mascotas adoptadas.</p>
+  {% endif %}
+{% endblock %}

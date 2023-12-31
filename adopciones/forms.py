@@ -1,6 +1,6 @@
 # En forms.py
 from django import forms
-from .models import TipoMascota, Region, Usuario, Comuna, User
+from .models import TipoMascota, Region, Usuario, Comuna, User, DatosPagoUsuario, Seguimiento, Vacuna
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 class BusquedaMascotaForm(forms.Form):
@@ -45,3 +45,43 @@ class RegistroUsuarioForm(UserCreationForm):
 
 class LoginForm(AuthenticationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'autofocus': True}), label="Username")
+
+
+class UsuarioForm(forms.ModelForm):
+    class Meta:
+        model = Usuario
+        fields = ['phone', 'gender', 'comuna']
+
+class DatosPagoUsuarioForm(forms.ModelForm):
+    class Meta:
+        model = DatosPagoUsuario
+        fields = ['banco', 'acc_type', 'num_cuenta']
+
+
+class VacunaForm(forms.ModelForm):
+    seguimiento = forms.ModelChoiceField(
+        queryset=Seguimiento.objects.none(),  # Empty queryset
+        to_field_name="fecha",
+        label="Fecha del seguimiento",
+        required=True
+    )
+
+    class Meta:
+        model = Vacuna
+        fields = ['fecha', 'tipo_vacuna', 'vigencia', 'seguimiento']
+
+    def __init__(self, *args, **kwargs):
+        mascota_id = kwargs.pop('mascota_id', None)
+        super(VacunaForm, self).__init__(*args, **kwargs)
+        if mascota_id:
+            self.fields['seguimiento'].queryset = Seguimiento.objects.filter(id_mascota=mascota_id)
+
+
+class SeguimientoForm(forms.ModelForm):
+    class Meta:
+        model = Seguimiento
+        fields = ['fecha', 'centro_veterinario', 'medico_veterinario', 'diagnostico', 'receta']
+
+    class Meta:
+        model = Seguimiento
+        fields = ['fecha', 'centro_veterinario', 'medico_veterinario', 'diagnostico', 'receta']
