@@ -3,9 +3,10 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LogoutView
 from . import views
-from .views import buscar_mascotas, ver_colectas, detalle_colecta, registro_usuario, LoginUsuarioView, perfil_usuario, agregar_datos_pago, crear_seguimiento
+from .views import buscar_mascotas, ver_colectas, detalle_colecta, registro_usuario, LoginUsuarioView, perfil_usuario, agregar_datos_pago, crear_seguimiento, organizacion_index
 
 urlpatterns = [
+    
     path("", views.index, name="index"),
     path('mascota/<int:mascota_id>/', views.detalle_mascota, name='detalle_mascota'),
     path('buscar/', buscar_mascotas, name='buscar_mascotas'),
@@ -21,7 +22,7 @@ urlpatterns = [
     path('crear_vacuna/<int:mascota_id>/', views.crear_vacuna, name='crear_vacuna'),
     path('eliminar_datos_pago/', views.eliminar_datos_pago, name='eliminar_datos_pago'),
     path('lista_vacunas/<int:seguimiento_id>/', views.lista_vacunas, name='lista_vacunas'),
+    path('organizacion_index/', organizacion_index, name='organizacion_index_view'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

@@ -1,0 +1,45 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Pet Shop{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style_org.css' %}">
+    <!--[if IE 6]><link href="{% static 'css/ie6.css' %}" rel="stylesheet" type="text/css"><![endif]-->
+    <!--[if IE 7]><link href="{% static 'css/ie7.css' %}" rel="stylesheet" type="text/css"><![endif]-->
+</head>
+<body>
+    <div id="header">
+        <a href="#" id="logo"><img src="{{ logo_url }}" width="150" height="114" alt=""></a>
+        <ul class="navigation">
+            <li class="active"><a href="{% url 'index' %}">Home</a></li>
+            <li>Ver sedes</a></li>
+            <li><a href="{% url 'ver_colectas' %}">Colectas</a></li>
+            <li><a href="{% url 'perfil_usuario' %}">Mi usuario</a></li>
+            <li><a href="contact.html">Contactanos</a></li>
+            {% if user.is_authenticated %}
+            <a href="{% url 'logout' %}">Cerrar Sesión</a>
+            {% else %}
+            <a href="{% url 'login' %}">Iniciar Sesión</a>
+            {% endif %}
+        </ul>
+    </div>
+    <div id="body">
+        <div id="content">
+            {% block content %}{% endblock %}
+        </div>
+        <div id="sidebar">
+            <!-- Sidebar content goes here -->
+        </div>
+    </div>
+    <div id="footer">
+        <div class="section">
+            <!-- Footer content goes here -->
+        </div>
+        <div id="footnote">
+            <div class="section">Copyright &copy; 2023 <a href="#">Adoptame.</a> Todos los derechos reservados.</div>
+        </div>
+    </div>
+</body>
+</html>

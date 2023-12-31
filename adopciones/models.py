@@ -16,7 +16,7 @@ class Organizacion(models.Model):
 
 class SedeOrganizacion(models.Model):
     nombre_org = models.ForeignKey(Organizacion, on_delete=models.CASCADE)
-    nombre_sede = models.CharField(max_length = 50, verbose_name = "Nombre de la sede", default = "Nombre por defecto")
+    nombre_sede = models.CharField(primary_key = True, max_length = 50, verbose_name = "Nombre de la sede", default = "Nombre por defecto")
     comuna = models.ForeignKey(Comuna, on_delete=models.CASCADE)
     direccion = models.CharField(max_length = 100, verbose_name = "Direccion de la sede")
     contacto = models.CharField(max_length=25,verbose_name = 'Telefono de contacto de la sede', default = "+569")
@@ -32,6 +32,7 @@ class Usuario(models.Model):
     gender = models.CharField(max_length=10, verbose_name="Género", choices=[('M', 'Masculino'), ('F', 'Femenino'), ('O', 'Otro')])
     role = models.CharField(max_length=10, verbose_name="Rol de usuario", choices=[('A', 'Adoptante'), ('O', 'Organizacion')], default= 'A')
     comuna = models.ForeignKey(Comuna, on_delete=models.CASCADE)
+    nombre_org = models.ForeignKey(Organizacion, on_delete=models.CASCADE, blank = True, null = True)
     def __str__(self):
         return str(self.user)
 
@@ -60,7 +61,7 @@ class TipoMascota(models.Model):
 
 
 class Mascota(models.Model):
-    id_sede_org = models.ForeignKey(SedeOrganizacion, max_length=12, verbose_name="Sede de la organizacion" , on_delete=models.CASCADE, default = "0")
+    sede_org = models.ForeignKey(SedeOrganizacion, max_length=12, verbose_name="Sede de la organizacion" , on_delete=models.CASCADE)
     tipo_nombre = models.ForeignKey(TipoMascota, on_delete=models.CASCADE)
     descripcion = models.TextField(verbose_name = "Descripcion de la mascota")
     tamano = models.CharField(max_length=25, verbose_name="Tamaño de la mascota", choices=[('S', 'Pequeño'), ('L', 'Grande'), ('M', 'Mediano')], default ='S' )

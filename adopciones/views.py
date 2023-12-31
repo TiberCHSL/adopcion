@@ -9,7 +9,7 @@ from .models import Mascota, Imagen, TipoMascota, Comuna, SedeOrganizacion, Cole
 from .forms import BusquedaMascotaForm, RegistroUsuarioForm, LoginForm, DatosPagoUsuarioForm, UsuarioForm, SeguimientoForm, VacunaForm
 
 def index(request):
-    mascotas = Mascota.objects.select_related('id_sede_org__comuna__region').all()[:4]
+    mascotas = Mascota.objects.select_related('sede_org__comuna__region').all()[:4]
 
     for mascota in mascotas:
         mascota.imagen = Imagen.objects.filter(id_mascota=mascota.id).first()
@@ -41,7 +41,7 @@ def buscar_mascotas(request):
         if tipo_mascota:
             mascotas = mascotas.filter(tipo_nombre=tipo_mascota)
         if region:
-            mascotas = mascotas.filter(id_sede_org__comuna__region=region)
+            mascotas = mascotas.filter(sede_org__comuna__region=region)
             
         for mascota in mascotas:
             mascota.imagen = Imagen.objects.filter(id_mascota=mascota.id).first()
@@ -105,9 +105,20 @@ def registro_usuario(request):
 
     return render(request, 'registro_usuario.html', {'form': form})
 
+from django.shortcuts import redirect
+
 class LoginUsuarioView(LoginView):
     form_class = LoginForm
     template_name = 'login.html'
+
+    def get_success_url(self):
+        user = self.request.user
+        if user.usuario.role == 'A':  # Adoptante
+            return redirect('index').url  # replace with the actual view name
+        elif user.usuario.role == 'O':  # Organizacion
+            return redirect('organizacion_index_view').url  # replace with the actual view name
+        else:
+            return super().get_success_url()  # default to the original behavior
 
 @login_required
 def perfil_usuario(request):
@@ -190,3 +201,22 @@ def crear_vacuna(request, mascota_id):
 def lista_vacunas(request, seguimiento_id):
     vacunas = Vacuna.objects.filter(id_seguimiento=seguimiento_id)
     return render(request, 'lista_vacunas.html', {'vacunas': vacunas})
+
+@login_required
+def organizacion_index(request):
+    # Get the logged-in user's organization
+    user_org = request.user.usuario.nombre_org
+
+    # Get the SedeOrganizacion instances associated with the user's organization
+    sedes = SedeOrganizacion.objects.filter(nombre_org=user_org)
+
+    # Get the Mascota instances associated with the user's organization's sedes
+    mascotas = Mascota.objects.select_related('sede_org__comuna__region').filter(sede_org__in=sedes)
+
+    for mascota in mascotas:
+        mascota.imagen = Imagen.objects.filter(id_mascota=mascota.id).first()
+    logo_url = user_org.logo_org.url
+
+    return render(request, 'index_org.html', {'mascotas': mascotas, 'logo_url': logo_url})
+
+    

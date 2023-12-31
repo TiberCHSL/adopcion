@@ -1,7 +1,8 @@
 from django.contrib import admin
 from .models import Organizacion, Usuario, TipoMascota, Mascota, Imagen, Seguimiento, Vacuna, Verificacion,Colecta,SedeOrganizacion, DatosPagoUsuario, Pagos
 from d3_dpa_chile.models import Region, Provincia, Comuna
-#Region, Comuna,
+Region, Comuna,
+
 
 admin.site.register(Region)
 admin.site.register(Comuna)
