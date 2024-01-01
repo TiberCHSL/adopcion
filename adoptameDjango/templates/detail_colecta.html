@@ -1,0 +1,13 @@
+{% extends 'base_org.html' %}
+
+{% block content %}
+  <h2>{{ colecta.nombre_colecta }}</h2>
+  <p>Descripción: {{ colecta.descripcion_colecta }}</p>
+  <p>Banco: {{ colecta.banco }}</p>
+  <p>Tipo de cuenta: {{ colecta.acc_type }}</p>
+  <p>Número de cuenta: {{ colecta.num_cuenta }}</p>
+  <p>Monto recaudado: {{ colecta.monto_recaudado }}</p>
+  <p>Monto a recaudar: {{ colecta.monto_final }}</p>
+  <a href="{% url 'edit_colecta' colecta.id %}">Editar</a>
+  <a href="{% url 'delete_colecta' colecta.id %}">Eliminar</a>
+{% endblock %}

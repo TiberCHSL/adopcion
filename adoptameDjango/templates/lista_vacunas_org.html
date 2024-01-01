@@ -1,0 +1,16 @@
+{% extends 'base_org.html' %}
+{% load static %}
+
+{% block content %}
+  <h1>Vacunas</h1>
+
+  {% for vacuna in vacunas %}
+    <div>
+      <h2>Fecha: {{ vacuna.fecha|date:'d/m/Y' }}</h2>
+      <p>Tipo de vacuna: {{ vacuna.tipo_vacuna }}</p>
+      <p>Vigencia: {{ vacuna.vigencia }}</p>
+    </div>
+  {% empty %}
+    <p>No hay vacunas para este seguimiento.</p>
+  {% endfor %}
+{% endblock %}

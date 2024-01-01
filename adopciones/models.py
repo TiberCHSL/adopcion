@@ -111,9 +111,9 @@ class Verificacion(models.Model):
     tipo_ver = models.CharField(max_length = 20,choices = [("O","Online"),("P","Presencial")])
     descripcion = models.TextField(verbose_name = "Descripcion de la verificacion")
     fecha = models.DateField(verbose_name="Fecha de la verificacion", null=True, blank=True)
-    vigencia_animal = models.BooleanField(verbose_name = "Debe ser devuelto o no", null = True, blank = True)
+    #vigencia_animal = models.BooleanField(verbose_name = "Debe ser devuelto o no", null = True, blank = True)
     rut = models.ForeignKey(Usuario, max_length=12, verbose_name="RUT del dueño" , on_delete=models.CASCADE)
-    nombre_org = models.ForeignKey(Organizacion, max_length=12, verbose_name="Nombre de la organizacion" , on_delete=models.CASCADE)
+    id_mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, default=0)
 
 class Colecta(models.Model):
     nombre_org = models.ForeignKey(Organizacion, max_length=12, verbose_name="Nombre de la organizacion" , on_delete=models.CASCADE)

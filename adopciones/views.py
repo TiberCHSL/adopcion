@@ -5,9 +5,11 @@ from django.contrib import messages
 from django.contrib.auth import login
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.decorators import login_required
-from .models import Mascota, Imagen, TipoMascota, Comuna, SedeOrganizacion, Colecta, DatosPagoUsuario, Usuario, Seguimiento, Pagos, Vacuna
+from .models import Mascota, Imagen, TipoMascota, Comuna, SedeOrganizacion, Colecta, DatosPagoUsuario, Usuario, Seguimiento, Pagos, Vacuna, Verificacion, Colecta
 from .forms import BusquedaMascotaForm, RegistroUsuarioForm, LoginForm, DatosPagoUsuarioForm, UsuarioForm, SeguimientoForm, VacunaForm, MascotaForm, ImagenForm
+from .forms import EditMascotaForm, AssignOwnerForm, VerificacionForm, ColectaForm
 from django.forms import formset_factory
+from django.views.decorators.csrf import csrf_exempt
 
 def index(request):
     mascotas = Mascota.objects.select_related('sede_org__comuna__region').all()[:4]
@@ -106,8 +108,6 @@ def registro_usuario(request):
 
     return render(request, 'registro_usuario.html', {'form': form})
 
-from django.shortcuts import redirect
-
 class LoginUsuarioView(LoginView):
     form_class = LoginForm
     template_name = 'login.html'
@@ -178,6 +178,7 @@ def crear_seguimiento(request, mascota_id):
 
     return render(request, 'crear_seguimiento.html', {'seguimiento_form': seguimiento_form, 'mascota_id': mascota_id})
 
+@login_required
 def lista_seguimientos(request, mascota_id):
     seguimientos = Seguimiento.objects.filter(id_mascota=mascota_id)
     for seguimiento in seguimientos:
@@ -199,6 +200,7 @@ def crear_vacuna(request, mascota_id):
 
     return render(request, 'crear_vacuna.html', {'vacuna_form': vacuna_form})
 
+@login_required
 def lista_vacunas(request, seguimiento_id):
     vacunas = Vacuna.objects.filter(id_seguimiento=seguimiento_id)
     return render(request, 'lista_vacunas.html', {'vacunas': vacunas})
@@ -231,13 +233,14 @@ def sedes_organizacion(request):
     return render(request, 'sedes_organizacion.html', {'sedes': sedes})
 
 def mascotas_sede(request, sede_id):
-    # Get the SedeOrganizacion instance
-    sede = SedeOrganizacion.objects.get(nombre_sede=sede_id)
+   # Get the SedeOrganizacion instance
+   sede = SedeOrganizacion.objects.get(nombre_sede=sede_id)
 
-    # Get the Mascota instances associated with the SedeOrganizacion
-    mascotas = Mascota.objects.filter(sede_org=sede)
+   # Get the Mascota instances associated with the SedeOrganizacion
+   mascotas_no_adopcion = Mascota.objects.filter(sede_org=sede, estado_adopcion=False)
+   mascotas_adopcion = Mascota.objects.filter(sede_org=sede, estado_adopcion=True)
 
-    return render(request, 'mascotas_sede.html', {'mascotas': mascotas})
+   return render(request, 'mascotas_sede.html', {'mascotas_no_adopcion': mascotas_no_adopcion, 'mascotas_adopcion': mascotas_adopcion})
 
 @login_required
 def agregar_mascota(request, sede_id):
@@ -261,3 +264,149 @@ def agregar_mascota(request, sede_id):
         form = MascotaForm()
         imagen_formset = ImagenFormSet(prefix='imagenes')
     return render(request, 'agregar_mascota.html', {'form': form, 'imagen_formset': imagen_formset})
+
+@login_required
+def edit_mascota(request, pk):
+   mascota = get_object_or_404(Mascota, pk=pk)
+
+   if request.method == 'POST':
+       form = EditMascotaForm(request.POST, instance=mascota)
+       if form.is_valid():
+           form.save()
+           return redirect('mascotas_sede_view', sede_id=mascota.sede_org.nombre_sede)
+   else:
+       form = EditMascotaForm(instance=mascota)
+
+   return render(request, 'edit_mascota.html', {'form': form})
+
+@login_required
+def lista_seguimientos_org(request, mascota_id):
+    seguimientos = Seguimiento.objects.filter(id_mascota=mascota_id)
+    for seguimiento in seguimientos:
+        seguimiento.vacunas = Vacuna.objects.filter(id_seguimiento=seguimiento)
+    return render(request, 'lista_seguimientos_org.html', {'seguimientos': seguimientos})
+
+@login_required
+def lista_vacunas_org(request, seguimiento_id):
+    vacunas = Vacuna.objects.filter(id_seguimiento=seguimiento_id)
+    return render(request, 'lista_vacunas_org.html', {'vacunas': vacunas})
+
+@login_required
+def delete_mascota(request, mascota_id):
+   mascota = get_object_or_404(Mascota, id=mascota_id)
+   mascota.delete()
+   return redirect('mascotas_sede_view', sede_id=mascota.sede_org.nombre_sede)
+
+@login_required
+def unadopt_mascota(request, mascota_id):
+    mascota = get_object_or_404(Mascota, id=mascota_id)
+    mascota.rut = None
+    mascota.estado_adopcion = False
+    mascota.save()
+    return redirect('mascotas_sede_view', sede_id=mascota.sede_org.nombre_sede)
+
+
+@csrf_exempt
+@login_required
+def assign_owner(request, mascota_id):
+    mascota = get_object_or_404(Mascota, id=mascota_id)
+    if request.method == 'POST':
+        rut = request.POST.get('rut')
+        if rut:
+            try:
+                usuario = Usuario.objects.get(rut=rut)
+                mascota.rut = usuario
+                mascota.estado_adopcion = True
+                mascota.save()
+            except Usuario.DoesNotExist:
+                # Handle the case where the entered rut does not exist
+                pass
+    return redirect('mascotas_sede_view', sede_id=mascota.sede_org.nombre_sede)
+
+
+@login_required
+def add_verificacion(request, mascota_id):
+    mascota = get_object_or_404(Mascota, id=mascota_id)
+    if request.method == 'POST':
+        form = VerificacionForm(request.POST)
+        if form.is_valid():
+            verificacion = form.save(commit=False)
+            verificacion.rut = mascota.rut
+            verificacion.id_mascota = mascota
+            verificacion.save()
+            return redirect('mascotas_sede_view', sede_id=mascota.sede_org.nombre_sede)
+    else:
+        form = VerificacionForm()
+    return render(request, 'add_verificacion.html', {'form': form})
+
+@login_required
+def verificaciones_mascota(request, mascota_id):
+    verificaciones = Verificacion.objects.filter(id_mascota=mascota_id)
+    return render(request, 'verificaciones_mascota.html', {'verificaciones': verificaciones})
+
+@login_required
+def verificaciones_mascota_usuario(request, mascota_id):
+    verificaciones = Verificacion.objects.filter(id_mascota=mascota_id)
+    return render(request, 'verificaciones_mascota_usuario.html', {'verificaciones': verificaciones})
+
+@login_required
+def list_colectas(request):
+    user_org = request.user.usuario.nombre_org
+    colectas = Colecta.objects.filter(nombre_org=user_org)
+    return render(request, 'list_colectas.html', {'colectas': colectas})
+
+@login_required
+def detail_colecta(request, colecta_id):
+    colecta = get_object_or_404(Colecta, id=colecta_id)
+    return render(request, 'detail_colecta.html', {'colecta': colecta})
+
+@login_required
+def create_colecta(request):
+    user_org = request.user.usuario.nombre_org
+    if request.method == 'POST':
+        form = ColectaForm(request.POST)
+        if form.is_valid():
+            colecta = form.save(commit=False)
+            colecta.nombre_org = user_org
+            colecta.save()
+            return redirect('list_colectas')
+    else:
+        form = ColectaForm()
+    return render(request, 'create_colecta.html', {'form': form})
+
+@login_required
+def edit_colecta(request, colecta_id):
+    colecta = get_object_or_404(Colecta, id=colecta_id)
+    if request.method == 'POST':
+        form = ColectaForm(request.POST, instance=colecta)
+        if form.is_valid():
+            form.save()
+            return redirect('detail_colecta', colecta_id=colecta.id)
+    else:
+        form = ColectaForm(instance=colecta)
+    return render(request, 'edit_colecta.html', {'form': form})
+
+@login_required
+def delete_colecta(request, colecta_id):
+    colecta = get_object_or_404(Colecta, id=colecta_id)
+    colecta.delete()
+    return redirect('list_colectas')
+
+@login_required
+def perfil_usuario_org(request):
+    user = request.user
+    usuario = Usuario.objects.get(user=user)
+    datos_pago_form = DatosPagoUsuarioForm()
+
+    if request.method == 'POST':
+        usuario_form = UsuarioForm(request.POST, instance=usuario)
+        if usuario_form.is_valid():
+            usuario_form.save()
+    else:
+        usuario_form = UsuarioForm(instance=usuario)
+
+    mascotas = Mascota.objects.filter(rut=usuario.rut)
+
+    datos_pago = DatosPagoUsuario.objects.filter(user=request.user).first()
+    return render(request, 'perfil_usuario_org.html', {'usuario_form': usuario_form, 'datos_pago_form': datos_pago_form, 'mascotas': mascotas, 'datos_pago': datos_pago})
+

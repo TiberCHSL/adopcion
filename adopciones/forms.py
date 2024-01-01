@@ -1,6 +1,6 @@
 # En forms.py
 from django import forms
-from .models import TipoMascota, Region, Usuario, Comuna, User, DatosPagoUsuario, Seguimiento, Vacuna, Mascota, Imagen
+from .models import TipoMascota, Region, Usuario, Comuna, User, DatosPagoUsuario, Seguimiento, Vacuna, Mascota, Imagen, Verificacion, Organizacion, Colecta
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 class BusquedaMascotaForm(forms.Form):
@@ -95,3 +95,23 @@ class ImagenForm(forms.ModelForm):
     class Meta:
         model = Imagen
         fields = ['img_mascota']
+
+class EditMascotaForm(forms.ModelForm):
+   class Meta:
+       model = Mascota
+       fields = ['sede_org', 'tipo_nombre', 'descripcion', 'tamano', 'soc_1', 'soc_2', 'soc_3', 'edad_est']
+
+class AssignOwnerForm(forms.Form):
+    rut = forms.CharField(max_length=12)
+
+
+class VerificacionForm(forms.ModelForm):
+    class Meta:
+        model = Verificacion
+        fields = ['tipo_ver', 'descripcion', 'fecha']
+
+
+class ColectaForm(forms.ModelForm):
+    class Meta:
+        model = Colecta
+        fields = ['nombre_colecta', 'descripcion_colecta', 'banco', 'acc_type', 'num_cuenta', 'monto_final']

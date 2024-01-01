@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>Verificaciones de la Mascota</h2>
+  <ul>
+  {% for verificacion in verificaciones %}
+    <li>
+      <p>Tipo de Verificación: {{ verificacion.tipo_ver }}</p>
+      <p>Descripción: {{ verificacion.descripcion }}</p>
+      <p>Fecha: {{ verificacion.fecha }}</p>
+    </li>
+  {% empty %}
+    <li>No hay verificaciones disponibles.</li>
+  {% endfor %}
+  </ul>
+{% endblock %}

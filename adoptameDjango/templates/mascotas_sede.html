@@ -1,18 +1,74 @@
 {% extends 'base_org.html' %}
 
 {% block content %}
-    <h1>Mascotas de la Sede</h1>
+ <h1>Mascotas de la Sede</h1>
 
-    <ul>
-    {% for mascota in mascotas %}
-        <li>
-            <h2>{{ mascota.tipo_nombre.get_tipo_nombre_display }}</h2>
-            <p>Descripción: {{ mascota.descripcion }}</p>
-            <p>Tamaño: {{ mascota.tamano }}</p>
-            <!-- Add more fields as needed -->
-        </li>
-    {% empty %}
-        <li>No hay mascotas disponibles.</li>
-    {% endfor %}
-    </ul>
-{% endblock %}
+ <h2>Mascotas no adoptadas</h2>
+ <ul>
+ {% for mascota in mascotas_no_adopcion %}
+    <li>
+        <h2>{{ mascota.tipo_nombre.get_tipo_nombre_display }}</h2>
+        <img src="{{ mascota.imagen_set.first.img_mascota.url }}" alt="Imagen de la mascota" width="200">
+        <p>Descripción: {{ mascota.descripcion }}</p>
+        <p>Tamaño: {{ mascota.tamano }}</p>
+        <!-- Add more fields as needed -->
+        <a href="{% url 'edit_mascota' mascota.pk %}">Modificar mascota</a>
+        <button onclick="assignOwner({{ mascota.pk }})">Asignar dueño</button>
+        <button onclick="confirmDelete({{ mascota.pk }})">Eliminar</button>
+    </li>
+ {% empty %}
+    <li>No hay mascotas disponibles.</li>
+ {% endfor %}
+ </ul>
+
+ <h2>Mascotas adoptadas</h2>
+ <ul>
+ {% for mascota in mascotas_adopcion %}
+    <li>
+        <h2>{{ mascota.tipo_nombre.get_tipo_nombre_display }}</h2>
+        <img src="{{ mascota.imagen_set.first.img_mascota.url }}" alt="Imagen de la mascota" width="200">
+        <p>Dueño: {{ mascota.rut.user.first_name }} {{ mascota.rut.user.last_name }}</p>
+        <p>Teléfono del dueño: {{ mascota.rut.phone }}</p>
+        <p>Descripción: {{ mascota.descripcion }}</p>
+        <p>Tamaño: {{ mascota.tamano }}</p>
+        <!-- Add more fields as needed -->
+        <a href="{% url 'edit_mascota' mascota.pk %}">Modificar mascota</a>
+        <a href="{% url 'lista_seguimientos_org' mascota.pk %}">Ver Seguimientos</a>
+        <a href="{% url 'add_verificacion' mascota.pk %}">Agregar Verificación</a>
+        <a href="{% url 'verificaciones_mascota' mascota.pk %}">Ver Verificaciones</a>
+        <button onclick="confirmUnadopt({{ mascota.pk }})">Desadoptar</button>
+    </li>
+ {% empty %}
+    <li>No hay mascotas disponibles.</li>
+ {% endfor %}
+ </ul>
+ <script>
+    function confirmDelete(mascotaId) {
+      console.log('Deleting mascota with ID: ', mascotaId);
+      if (confirm('Seguro que quieres eliminar esta mascota?')) {
+          window.location.href = '/delete_mascota/' + mascotaId;
+      }
+    }
+    function confirmUnadopt(mascotaId) {
+  console.log('Unadopting mascota with ID: ', mascotaId);
+  if (confirm('Seguro que quieres desadoptar esta mascota?')) {
+      window.location.href = '/unadopt_mascota/' + mascotaId;
+    }
+    }
+    function assignOwner(mascotaId) {
+  var rut = prompt("Por favor ingrese un rut valido:");
+  if (rut != null) {
+      var form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/assign_owner/' + mascotaId + '/';
+      var input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = 'rut';
+      input.value = rut;
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+  }
+}
+    </script>
+ {% endblock %}

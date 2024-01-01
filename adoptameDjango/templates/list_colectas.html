@@ -1,0 +1,21 @@
+{% extends 'base_org.html' %}
+
+{% block content %}
+  <h2>Colectas</h2>
+  <ul>
+  {% for colecta in colectas %}
+    <li>
+      <a href="{% url 'detail_colecta' colecta.id %}">{{ colecta.nombre_colecta }}</a>
+      <p>Monto Recaudado: ${{ colecta.monto_recaudado }}</p>
+                <p>Monto Final: ${{ colecta.monto_final }}</p>
+                <div>
+                    <p>Progreso:</p>
+                    <progress max="{{ colecta.monto_final }}" value="{{ colecta.monto_recaudado }}"></progress>
+                </div>
+    </li>
+  {% empty %}
+    <li>No hay colectas disponibles.</li>
+  {% endfor %}
+  </ul>
+  <a href="{% url 'create_colecta' %}">Crear nueva colecta</a>
+{% endblock %}
