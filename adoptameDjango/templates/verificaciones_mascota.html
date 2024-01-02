@@ -5,7 +5,7 @@
   <ul>
   {% for verificacion in verificaciones %}
     <li>
-      <p>Tipo de Verificación: {{ verificacion.tipo_ver }}</p>
+      <p>Tipo de Verificación: {{ verificacion.get_tipo_ver_display }}</p>
       <p>Descripción: {{ verificacion.descripcion }}</p>
       <p>Fecha: {{ verificacion.fecha }}</p>
     </li>

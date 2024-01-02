@@ -115,6 +115,9 @@ class Verificacion(models.Model):
     rut = models.ForeignKey(Usuario, max_length=12, verbose_name="RUT del dueño" , on_delete=models.CASCADE)
     id_mascota = models.ForeignKey(Mascota, on_delete=models.CASCADE, default=0)
 
+    def __str__(self):
+        return self.get_tipo_ver_display()
+
 class Colecta(models.Model):
     nombre_org = models.ForeignKey(Organizacion, max_length=12, verbose_name="Nombre de la organizacion" , on_delete=models.CASCADE)
     nombre_colecta = models.CharField(max_length = 50, verbose_name = "Nombre de la colecta")
