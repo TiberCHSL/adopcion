@@ -43,13 +43,6 @@ class DatosPagoUsuario(models.Model):
     acc_type = models.CharField(max_length=50, choices=[('C','Cuenta corriente'),('V','Cuenta vista'),('A','Cuenta de ahorro')])
     num_cuenta = models.CharField(primary_key = True,max_length=50,verbose_name = "Numero de la cuenta")
     def __str__(self):
-        return str(self.user)
-
-
-class Pagos(models.Model):
-    num_cuenta = models.ForeignKey(DatosPagoUsuario, on_delete=models.CASCADE, null = True)
-    monto = models.IntegerField(verbose_name = 'Cantidad')
-    def __str__(self):
         return str(self.num_cuenta)
 
 
@@ -131,6 +124,11 @@ class Colecta(models.Model):
         return self.nombre_colecta
 
 
-
+class Pagos(models.Model):
+    num_cuenta = models.ForeignKey(DatosPagoUsuario, on_delete=models.CASCADE, null = True)
+    monto = models.IntegerField(verbose_name = 'Cantidad')
+    nombre_colecta = models.ForeignKey(Colecta, on_delete=models.CASCADE, null = True)
+    def __str__(self):
+        return str(self.num_cuenta)
 #Debe ser mayor de edad, validacion
 

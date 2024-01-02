@@ -57,37 +57,37 @@ def ver_colectas(request):
 
 @login_required
 def detalle_colecta(request, colecta_id):
-   colecta = Colecta.objects.get(pk=colecta_id)
-   user = request.user
-   usuario = Usuario.objects.get(user=user)
-   try:
-       datos_pago = DatosPagoUsuario.objects.get(user=user)
-   except DatosPagoUsuario.DoesNotExist:
-       datos_pago = None
-   except DatosPagoUsuario.MultipleObjectsReturned:
-       # Handle the case where multiple DatosPagoUsuario objects are found
-       pass
+  colecta = Colecta.objects.get(pk=colecta_id)
+  user = request.user
+  usuario = Usuario.objects.get(user=user)
+  try:
+      datos_pago = DatosPagoUsuario.objects.get(user=user)
+  except DatosPagoUsuario.DoesNotExist:
+      datos_pago = None
+  except DatosPagoUsuario.MultipleObjectsReturned:
+      # Handle the case where multiple DatosPagoUsuario objects are found
+      pass
 
-   if request.method == 'POST':
-       monto = request.POST.get('monto')
-       try:
-           monto = int(monto)
-           if monto <= 0:
-               raise ValueError("El monto debe ser positivo.")
-           
-           if monto <= colecta.monto_final - colecta.monto_recaudado:
-               #Realizar donación
-               Pagos.objects.create(num_cuenta=datos_pago, monto=monto)
-               colecta.monto_recaudado += monto
-               colecta.save()
-               messages.success(request, f'Donación de ${monto} realizada con éxito.')
-           else:
-               messages.error(request, 'El monto de la donación excede el objetivo de la colecta.')
-       except ValueError as e:
-           messages.error(request, f'Error al procesar la donación: {str(e)}')
+  if request.method == 'POST':
+      monto = request.POST.get('monto')
+      try:
+          monto = int(monto)
+          if monto <= 0:
+              raise ValueError("El monto debe ser positivo.")
+          
+          if monto <= colecta.monto_final - colecta.monto_recaudado:
+              # Realizar donación
+              Pagos.objects.create(num_cuenta=datos_pago, monto=monto, nombre_colecta=colecta)
+              colecta.monto_recaudado += monto
+              colecta.save()
+              messages.success(request, f'Donación de ${monto} realizada con éxito.')
+          else:
+              messages.error(request, 'El monto de la donación excede el objetivo de la colecta.')
+      except ValueError as e:
+          messages.error(request, f'Error al procesar la donación: {str(e)}')
 
-       return redirect('detalle_colecta', colecta_id=colecta_id)
-   return render(request, 'detalle_colecta.html', {'colecta': colecta, 'usuario': usuario, 'datos_pago': datos_pago})
+      return redirect('detalle_colecta', colecta_id=colecta_id)
+  return render(request, 'detalle_colecta.html', {'colecta': colecta, 'usuario': usuario, 'datos_pago': datos_pago})
 
 def registro_usuario(request):
     if request.method == 'POST':
@@ -416,3 +416,8 @@ def perfil_usuario_org(request):
     datos_pago = DatosPagoUsuario.objects.filter(user=request.user).first()
     return render(request, 'perfil_usuario_org.html', {'usuario_form': usuario_form, 'datos_pago_form': datos_pago_form, 'mascotas': mascotas, 'datos_pago': datos_pago})
 
+@login_required
+def ver_pagos(request, colecta_id):
+   colecta = get_object_or_404(Colecta, id=colecta_id)
+   pagos = Pagos.objects.filter(nombre_colecta=colecta)
+   return render(request, 'ver_pagos.html', {'pagos': pagos})

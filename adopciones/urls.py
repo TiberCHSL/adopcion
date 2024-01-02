@@ -41,7 +41,7 @@ urlpatterns = [
     path('colectas/<int:colecta_id>/edit/', views.edit_colecta, name='edit_colecta'),
     path('colectas/<int:colecta_id>/delete/', views.delete_colecta, name='delete_colecta'),
     path('perfil_org/', perfil_usuario_org, name='perfil_usuario_org'),
+    path('ver_pagos/<int:colecta_id>/', views.ver_pagos, name='ver_pagos'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
