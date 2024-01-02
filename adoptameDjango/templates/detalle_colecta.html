@@ -2,37 +2,42 @@
 {% load static %}
 
 {% block content %}
-  <h1>Detalles de la Colecta</h1>
+ <h1>Detalles de la Colecta</h1>
 
-  <div>
-    <h2>{{ colecta.nombre_colecta }}</h2>
-    {% if colecta.nombre_org.logo_org %}
-      <img src="{{ colecta.nombre_org.logo_org.url }}" alt="Logo de la organización" width="100">
-    {% endif %}
-    <p>Organización: {{ colecta.nombre_org.nombre_org }}</p>
-    <p>Descripción: {{ colecta.descripcion_colecta }}</p>
-    <p>Banco: {{ colecta.banco }}</p>
-    <p>Tipo de cuenta: {{ colecta.get_acc_type_display }}</p>
-    <p>Número de cuenta: {{ colecta.num_cuenta }}</p>
-    <p>Monto recaudado: ${{ colecta.monto_recaudado }}</p>
-    <p>Monto final: ${{ colecta.monto_final }}</p>
+ <div>
+   <h2>{{ colecta.nombre_colecta }}</h2>
+   {% if colecta.nombre_org.logo_org %}
+     <img src="{{ colecta.nombre_org.logo_org.url }}" alt="Logo de la organización" width="100">
+   {% endif %}
+   <p>Organización: {{ colecta.nombre_org.nombre_org }}</p>
+   <p>Descripción: {{ colecta.descripcion_colecta }}</p>
+   <p>Banco: {{ colecta.banco }}</p>
+   <p>Tipo de cuenta: {{ colecta.get_acc_type_display }}</p>
+   <p>Número de cuenta: {{ colecta.num_cuenta }}</p>
+   <p>Monto recaudado: ${{ colecta.monto_recaudado }}</p>
+   <p>Monto final: ${{ colecta.monto_final }}</p>
 
-    {% if colecta.monto_final > 0 %}
-      <div class="progress">
-        <div class="progress-bar" role="progressbar" style="width: {% widthratio colecta.monto_recaudado colecta.monto_final 100 %}%;" aria-valuenow="{{ colecta.monto_recaudado }}" aria-valuemin="0" aria-valuemax="{{ colecta.monto_final }}"></div>
-      </div>
-    {% endif %}
-  </div>
+   {% if colecta.monto_final > 0 %}
+     <div class="progress">
+       <div class="progress-bar" role="progressbar" style="width: {% widthratio colecta.monto_recaudado colecta.monto_final 100 %}%;" aria-valuenow="{{ colecta.monto_recaudado }}" aria-valuemin="0" aria-valuemax="{{ colecta.monto_final }}"></div>
+     </div>
+   {% endif %}
+ </div>
 
-  {% if user.is_authenticated %}
-    <h2>Realizar Donación</h2>
-    <form method="post" action="{% url 'detalle_colecta' colecta.id %}">
-      {% csrf_token %}
-      <label for="monto">Monto de donación:</label>
-      <input type="number" name="monto" required>
-      <button type="submit">Donar</button>
-    </form>
-  {% else %}
-    <p>Inicia sesión para realizar una donación.</p>
-  {% endif %}
+ {% if user.is_authenticated %}
+ {% if datos_pago is not null %}
+ <h2>Realizar Donación</h2>
+ <form method="post" action="{% url 'detalle_colecta' colecta.id %}">
+   {% csrf_token %}
+   <label for="monto">Monto de donación:</label>
+   <input type="number" name="monto" required>
+   <button type="submit">Donar</button>
+ </form>
+{% else %}
+ <p>Por favor, agrega tus datos de pago antes de realizar una donación en la sección "Mi usuario".</p>
+{% endif %}
+{% else %}
+ <p>Inicia sesión para realizar una donación.</p>
+{% endif %}
 {% endblock %}
+
