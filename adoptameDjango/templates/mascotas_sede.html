@@ -10,7 +10,7 @@
         <h2>{{ mascota.tipo_nombre.get_tipo_nombre_display }}</h2>
         <img src="{{ mascota.imagen_set.first.img_mascota.url }}" alt="Imagen de la mascota" width="200">
         <p>Descripción: {{ mascota.descripcion }}</p>
-        <p>Tamaño: {{ mascota.tamano }}</p>
+        <p>Tamaño: {{ mascota.get_tamano_display }}</p>
         <!-- Add more fields as needed -->
         <a href="{% url 'edit_mascota' mascota.pk %}">Modificar mascota</a>
         <button onclick="assignOwner({{ mascota.pk }})">Asignar dueño</button>
@@ -30,7 +30,7 @@
         <p>Dueño: {{ mascota.rut.user.first_name }} {{ mascota.rut.user.last_name }}</p>
         <p>Teléfono del dueño: {{ mascota.rut.phone }}</p>
         <p>Descripción: {{ mascota.descripcion }}</p>
-        <p>Tamaño: {{ mascota.tamano }}</p>
+        <p>Tamaño: {{ mascota.get_tamano_display }}</p>
         <!-- Add more fields as needed -->
         <a href="{% url 'edit_mascota' mascota.pk %}">Modificar mascota</a>
         <a href="{% url 'lista_seguimientos_org' mascota.pk %}">Ver Seguimientos</a>

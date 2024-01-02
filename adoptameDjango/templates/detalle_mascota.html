@@ -14,9 +14,9 @@
       <p>Tamaño: {{ mascota.get_tamano_display }}</p>
       <p>Edad: {{ mascota.edad_est }} años</p>
       <p>Descripción: {{ mascota.descripcion }}</p>
-      <p>Sociable con niños: {{ mascota.soc_1 }}</p>
-      <p>Sociable con perros: {{ mascota.soc_2 }}</p>
-      <p>Sociable con gatos: {{ mascota.soc_3 }}</p>
+      <p>Sociable con niños: {{ mascota.get_soc_1_display }}</p>
+      <p>Sociable con perros: {{ mascota.get_soc_2_display }}</p>
+      <p>Sociable con gatos: {{ mascota.get_soc_3_display }}</p>
       <p>Nombre de la organización: {{ mascota.sede_org.nombre_org.nombre_org }}</p>
       <p>Número de contacto de la sede: {{ mascota.sede_org.contacto }}</p>
     </div>

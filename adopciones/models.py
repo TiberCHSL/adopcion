@@ -57,7 +57,7 @@ class TipoMascota(models.Model):
     tipo_nombre = models.CharField(primary_key = True, max_length=10, verbose_name="Tipo de mascota", choices=[('P', 'Perro'), ('G', 'Gato'), ('O', 'Otro')])
     
     def __str__(self):
-        return self.tipo_nombre
+        return self.get_tipo_nombre_display()
 
 
 class Mascota(models.Model):

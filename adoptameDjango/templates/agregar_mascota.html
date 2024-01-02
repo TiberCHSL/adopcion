@@ -1,11 +1,17 @@
-{% extends 'base.html' %}
+{% extends 'base_org.html' %}
 
 {% block content %}
     <h1>Agregar Mascota</h1>
 
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }}
+        <p>{{ form.tipo_nombre.label_tag }} {{ form.tipo_nombre }}</p>
+        <p>{{ form.tamano.label_tag }} {{ form.tamano }}</p>
+        <p>{{ form.edad_est.label_tag }} {{ form.edad_est }}</p>
+        <p>{{ form.descripcion.label_tag }} {{ form.descripcion }}</p>
+        <p>{{ form.soc_1.label_tag }} {{ form.soc_1 }}</p>
+        <p>{{ form.soc_2.label_tag }} {{ form.soc_2 }}</p>
+        <p>{{ form.soc_3.label_tag }} {{ form.soc_3 }}</p>
         {{ imagen_formset.management_form }}
         <div id="imagen-formset">
             {% for imagen_form in imagen_formset %}
@@ -14,8 +20,8 @@
                 </div>
             {% endfor %}
         </div>
-        <button type="button" id="add-form">Add another image</button>
-        <button type="button" id="delete-form">Delete last image</button>
+        <button type="button" id="add-form">Agregar imagen</button>
+        <button type="button" id="delete-form">Eliminar imagen</button>
         <button type="submit">Guardar</button>
     </form>
 
